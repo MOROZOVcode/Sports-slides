@@ -9,6 +9,8 @@
 body {
 	font-family: "Roboto", sans-serif;
 	height: 100vh;
+	-webkit-tap-highlight-color: transparent;
+
 }
 
 .container {
@@ -82,13 +84,6 @@ button:focus {
 	outline: none;
 }
 
-/* .container .controls button {
-	position: absolute;
-	left: 35%;
-	top: 50%;
-	z-index: 100;
-} */
-
 .container .controls .down-button {
 	transform: translateX(-100%);
 	border-top-left-radius: 5px;
@@ -99,4 +94,46 @@ button:focus {
 	transform: translateY(-100%);
 	border-top-right-radius: 5px;
 	border-bottom-right-radius: 5px;
+}
+
+@media (max-width: 500px) {
+	.sidebar {
+		height: 30%;
+		width: 100%;
+		top: 70%;
+		display: flex;
+	}
+
+	.sidebar>div {
+		flex: 0 0 100vw;
+	}
+
+	.main-slide {
+		display: flex;
+		height: 70%;
+		left: 0%;
+		width: 100%;
+	}
+
+	.main-slide>div {
+		flex: 0 0 100vw;
+	}
+
+	button {
+		background-color: rgba(255, 255, 255, 0.86);
+		font-size: 16px;
+		padding: 24px 8px;
+		left: 50%;
+		top: 70%;
+	}
+
+	.container .controls .up-button {
+		transform: translateY(-72%) translateX(53%) rotateZ(90deg);
+		border-radius: 5px 0 0 5px;
+	}
+
+	.container .controls .down-button {
+		transform: translateX(-167%) translateY(-28%) rotateZ(90deg);
+		border-radius: 0 5px 5px 0;
+	}
 }
