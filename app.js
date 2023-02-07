@@ -20,19 +20,95 @@ for (let i = 0; i < arr.length; i++) {
 	mainSlideNode.append(mainSlideItemNode);
 }
 
+const heightContainer = containerNode.clientHeight;
+const widthContainer = containerNode.clientWidth;
+
 const slidesInSidebarNode = mainSlideNode.querySelectorAll("div");
 const countSlides = slidesInSidebarNode.length;
 
 let activeSlideIndex = 0;
 const screenWidth = window.screen.width;
 
-if (screenWidth > 500) {
-	sidebarNode.style.top = calсHeightSidebar();
-} else {
-	sidebarNode.style.left = calсHeightSidebar();
+/////////////////////////////////////////////////////////////////////////
 
-	console.log(containerNode.clientWidth);
+let positionX = 0;
+let transform = 0;
+let calc;
+
+mainSlideNode.addEventListener("touchstart", (event) => {
+	touchstart(event);
+});
+mainSlideNode.addEventListener("touchmove", (event) => {
+	event.preventDefault();
+
+	touchmove(event, "mainSlide");
+});
+mainSlideNode.addEventListener("touchend", () => {
+	touchend("mainSlide");
+});
+
+sidebarNode.addEventListener("touchstart", (event) => {
+	touchstart(event);
+});
+sidebarNode.addEventListener("touchmove", (event) => {
+	event.preventDefault();
+
+	touchmove(event, "sidebar");
+});
+sidebarNode.addEventListener("touchend", () => {
+	touchend("sidebar");
+});
+
+function touchstart(event) {
+	const touch = event.touches[0];
+	positionX = touch.clientX;
 }
+
+function touchmove(event, node) {
+	const touch = event.touches[0];
+	let positionMoveX = touch.clientX;
+
+	calc = positionX - positionMoveX;
+
+	mainSlideNode.style.transform = `translateX(-${calcShift(node)}px)`;
+	sidebarNode.style.transform = `translateX(${calcShift(node)}px)`;
+}
+
+function touchend(node) {
+	let dirOne;
+	let dirTwo;
+
+	if (node === "mainSlide") {
+		dirOne = "up";
+		dirTwo = "down";
+	} else if (node === "sidebar") {
+		dirOne = "down";
+		dirTwo = "up";
+	}
+
+	if (calc > 0) {
+		changeSlide(dirOne);
+	} else if (calc < 0) {
+		changeSlide(dirTwo);
+	}
+
+	calc = 0;
+}
+
+function calcShift(node) {
+	const widthInVW = 100;
+	if (node === "mainSlide") {
+		return (widthContainer / widthInVW) * calc * 2 + transform;
+	} else if (node === "sidebar") {
+		return -((widthContainer / widthInVW) * calc * 2 - transform);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+screenWidth > 500
+	? (sidebarNode.style.top = calсHeightSidebar())
+	: (sidebarNode.style.left = calсHeightSidebar());
 
 upBtnNode.addEventListener("click", () => {
 	changeSlide("up");
@@ -79,27 +155,21 @@ function changeSlide(direction) {
 }
 
 function changeSlideDesktop() {
-	const heightContainer = containerNode.clientHeight;
-
 	mainSlideNode.style.transform = `translateY(-${offsetSlides()}px)`;
 	sidebarNode.style.transform = `translateY(${offsetSlides()}px)`;
 
 	function offsetSlides() {
 		return activeSlideIndex * heightContainer;
 	}
-
-	console.log(activeSlideIndex * heightContainer);
 }
 
 function changeSlideMobile() {
-	const widthContainer = containerNode.clientWidth;
-
 	mainSlideNode.style.transform = `translateX(-${offsetSlides()}px)`;
 	sidebarNode.style.transform = `translateX(${offsetSlides()}px)`;
+
+	transform = offsetSlides();
 
 	function offsetSlides() {
 		return activeSlideIndex * widthContainer;
 	}
-
-	console.log(activeSlideIndex * widthContainer);
 }
